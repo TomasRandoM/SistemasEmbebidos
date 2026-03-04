@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embebidos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<body class="d-flex justify-content-center align-items-center vh-100">
+    <div class="container text-center">
+        <h3 class="fw-bold mb-4">Panel de Control</h3>
+        <hr class="mb-4">
+        <div class="row justify-content-center g-4 mb-4">
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Led 9</h5>
+                        <span class="badge bg-primary ms-2 mb-3" id="ldrLed9"> Brillo actual: <span id="brilloLed9">50</span></span> <br>
+                        <label for="led9" class="form-label">
+                            <span id="valorLed9">50</span>
+                        </label>
+                        <input type="range" class="form-range slider" id="led9" min="0" max="100" value="50"
+                            oninput="document.getElementById('valorLed9').innerText = this.value">
+                    </div>
+                </div>
+            
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Led 10</h5>
+                        <span class="badge bg-primary ms-2 mb-3" id="ldrLed10"> Brillo actual: <span id="brilloLed10">50</span></span> <br>
+                        <label for="led10" class="form-label">
+                            <span id="valorLed10">50</span>
+                        </label>
+                        <input type="range" class="form-range slider" id="led10" min="0" max="100" value="50"
+                            oninput="document.getElementById('valorLed10').innerText = this.value">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Led 11</h5>
+                        <span class="badge bg-primary ms-2 mb-3" id="ldrLed11"> Brillo actual: <span id="brilloLed11">50</span></span> <br>
+                        <label for="led11" class="form-label">
+                            <span id="valorLed11">50</span>
+                        </label>
+                        <input type="range" class="form-range slider" id="led11" min="0" max="100" value="50"
+                            oninput="document.getElementById('valorLed11').innerText = this.value">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center g-4">
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Led 13</h5>
+                        <input type="checkbox" class="btn-check" id="led13" autocomplete="off">
+                        <label class="btn btn-outline-primary" for="led13">Encender</label><br>
+                    </div>
+                </div>
+            
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Intensidad LDR</h5>
+                        <p class="display-6" id="valorLDR">50</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="/static/script.js"></script>
+</body>
+</html>
+
