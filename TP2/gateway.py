@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import threading
 import time
+import serial
 
 app = Flask(__name__)
 

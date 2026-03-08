@@ -14,6 +14,7 @@ c_time = time.ctime(respuesta.tx_time)
 
 
 #Inicializamos el serial
+
 ser = serial.Serial(port='COM5', 
                     baudrate=9600, 
                     bytesize=serial.EIGHTBITS,
@@ -27,6 +28,7 @@ ser = serial.Serial(port='COM5',
                     exclusive=None)
 time.sleep(2)
 
+
 @app.route("/")
 def index():
     return app.send_static_file("index.html")
@@ -38,26 +40,35 @@ def getEEPROM():
     items = line.strip().split(',')
     unique_items = list(dict.fromkeys(items))
 
-    pairs = []
+    events = []
+
     for item in unique_items:
         if item:
             valor, pin = item.split('-')
-            pairs.append((int(valor), int(pin)))
+            events.append({
+                "timestamp": time.ctime(int(valor)),
+                "pin": int(pin)
+            })
 
-    print(pairs)
-    return "OK", 200
+    return jsonify(events)
 
 @app.route("/deleteEEPROM", methods=["GET"])
 def deleteEEPROM():
     ser.write(b"2\n")
     return "OK", 200
 
-
+@app.route("/updateTime", methods=["GET"])
+def updateTime():
+    respuesta = cliente.request('pool.ntp.org')
+    unix_time = int(respuesta.tx_time)
+    unixTimeSend = ("0," + str(unix_time) + "\n")
+    ser.write(unixTimeSend.encode("utf-8"))
+    
+    return jsonify({"time" : time.ctime(int(unix_time))}), 200
 
 
 if __name__ == "__main__":
     unixTimeSend = ("0," + str(unix_time) + "\n")
-    print(unixTimeSend)
     ser.write(unixTimeSend.encode("utf-8"))
     app.run(host="0.0.0.0", port=3000, debug=True, use_reloader=False)
 
