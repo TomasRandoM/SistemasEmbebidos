@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Monitor de Intensidad Luminosa</title>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .sensor {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #2a5298;
+        }
+
+        .status {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+
+        .alarm {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .alarm.off {
+            background: #e0ffe0;
+            color: #1c7c1c;
+        }
+
+        .alarm.on {
+            background: #ffdddd;
+            color: #b30000;
+        }
+
+        .buttons {
+            margin-top: 25px;
+        }
+
+        button {
+            padding: 12px 18px;
+            margin: 5px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .start {
+            background: #28a745;
+            color: white;
+        }
+
+        .stop {
+            background: #dc3545;
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <div class="container">
+
+        <h1>Intensidad Luminosa</h1>
+
+        <div class="sensor" id="valorLuz">0</div>
+
+        <div class="status">
+            Lectura: <span id="estadoLectura">DETENIDA</span>
+        </div>
+
+        <div id="alarma" class="alarm off">
+            Alarma desactivada
+        </div>
+
+        <div class="buttons">
+            <button class="start" onclick="iniciarLectura()">Iniciar lectura</button>
+            <button class="stop" onclick="detenerLectura()">Detener lectura</button>
+        </div>
+
+    </div>
+
+
+    <script>
+
+        function iniciarLectura() {
+            fetch("/start");
+            document.getElementById("estadoLectura").innerText = "ACTIVA";
+        }
+
+        function detenerLectura() {
+            fetch("/stop");
+            document.getElementById("estadoLectura").innerText = "DETENIDA";
+        }
+
+        // Simulación actualización valor
+        setInterval(() => {
+
+
+            fetch("/valor")
+                .then(res => res.json())
+                .then(data => {
+
+                    document.getElementById("estadoLectura").innerText = data.readActivated ? "ACTIVA" : "DETENIDA";
+
+                    if(data.readActivated) {
+                        document.getElementById("valorLuz").innerText = data.ldrValue;
+
+                        if (data.alarm) {
+                            let alarma = document.getElementById("alarma");
+                            alarma.className = "alarm on";
+                            alarma.innerText = "ALARMA: luz mayor a 800";
+                        }
+                    }
+                    
+                });
+
+        }, 3000);
+
+    </script>
+
+</body>
+
+</html>

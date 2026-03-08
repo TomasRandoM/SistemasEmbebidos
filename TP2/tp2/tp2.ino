@@ -21,10 +21,6 @@ void setup() {
   activateSemaphore   = xSemaphoreCreateBinary();
   deactivateSemaphore = xSemaphoreCreateBinary();
 
-  if (mutex && activateSemaphore && deactivateSemaphore) {
-    Serial.println("Semaphores created");
-  }
-
   xTaskCreate(TaskAnalogRead,   "AnalogRead",   128, NULL, 1, NULL);
   xTaskCreate(TaskAnalogWrite,  "AnalogWrite",  128, NULL, 1, NULL);
   xTaskCreate(TaskControlRead,  "ControlRead",  128, NULL, 2, NULL); // prioridad alta
@@ -35,8 +31,6 @@ void setup() {
 
 void loop() {}
 
-// ✅ ISR correcta: solo usa FromISR, sin bloqueos
-// ✅ Versión correcta para AVR
 void interruptHandlerActivate() {
   BaseType_t xHigherPriorityTaskWoken = pdFALSE;
   xSemaphoreGiveFromISR(activateSemaphore, &xHigherPriorityTaskWoken);
@@ -60,12 +54,12 @@ void TaskControlRead(void *pvParameters) {
     // Espera señal de activar
     if (xSemaphoreTake(activateSemaphore, 30) == pdPASS) {
       readActivated = true;
-      Serial.println("Read ACTIVATED");
+      Serial.println("-2");
     }
     // Espera señal de desactivar
     if (xSemaphoreTake(deactivateSemaphore, 30) == pdPASS) {
       readActivated = false;
-      Serial.println("Read DEACTIVATED");
+      Serial.println("-3");
     }
     vTaskDelay(pdMS_TO_TICKS(20));
   }
@@ -77,21 +71,39 @@ void TaskAnalogRead(void *pvParameters) {
   pinMode(A3, INPUT);
   pinMode(12, OUTPUT);
   for (;;) {
+    if (Serial.available()) {
+
+      String line = Serial.readStringUntil('\n');
+      line.trim();
+
+      if (line.startsWith("-2")) {
+        readActivated = true;
+      }
+      else if (line.startsWith("-3")) {
+        readActivated = false;
+      }
+    }
+    
     if (readActivated) {
       if (xSemaphoreTake(mutex, portMAX_DELAY) == pdPASS) {
         a3Value = analogRead(A3);
         if (a3Value > 800) {
           alarmActivated = true;
+          Serial.println("-1");
         }
         
         xSemaphoreGive(mutex);
       }
     }
     else {
-      alarmActivated = false;
+      if (alarmActivated == true) {
+        alarmActivated = false; 
+        Serial.println("-4");
+      }
+      
+      
     }
     if(alarmActivated) {
-      Serial.println("alarma");
       digitalWrite(12, HIGH);
       vTaskDelay(pdMS_TO_TICKS(100));
       digitalWrite(12, LOW);
