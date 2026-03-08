@@ -2,15 +2,15 @@
 #include <semphr.h>
 
 SemaphoreHandle_t mutex;
-SemaphoreHandle_t activateSemaphore;   // señal para activar lectura
-SemaphoreHandle_t deactivateSemaphore; // señal para desactivar lectura
+SemaphoreHandle_t activateSemaphore;   
+SemaphoreHandle_t deactivateSemaphore; 
 
 volatile bool readActivated = true;
 int a3Value;
 
 void TaskAnalogRead(void *pvParameters);
 void TaskAnalogWrite(void *pvParameters);
-void TaskControlRead(void *pvParameters); // nueva tarea para manejar activación
+void TaskControlRead(void *pvParameters); 
 void BlinkFunction(void *pvParameters);
 
 
@@ -23,7 +23,7 @@ void setup() {
 
   xTaskCreate(TaskAnalogRead,   "AnalogRead",   128, NULL, 1, NULL);
   xTaskCreate(TaskAnalogWrite,  "AnalogWrite",  128, NULL, 1, NULL);
-  xTaskCreate(TaskControlRead,  "ControlRead",  128, NULL, 2, NULL); // prioridad alta
+  xTaskCreate(TaskControlRead,  "ControlRead",  128, NULL, 2, NULL); 
   xTaskCreate(BlinkFunction,  "Blink",  128, NULL, 1, NULL); 
   attachInterrupt(digitalPinToInterrupt(2), interruptHandlerActivate,   RISING);
   attachInterrupt(digitalPinToInterrupt(3), interruptHandlerDeactivate, RISING);
@@ -35,7 +35,7 @@ void interruptHandlerActivate() {
   BaseType_t xHigherPriorityTaskWoken = pdFALSE;
   xSemaphoreGiveFromISR(activateSemaphore, &xHigherPriorityTaskWoken);
   if (xHigherPriorityTaskWoken) {
-    portYIELD_FROM_ISR(); // sin argumento en AVR
+    portYIELD_FROM_ISR(); 
   }
 }
 
@@ -43,20 +43,18 @@ void interruptHandlerDeactivate() {
   BaseType_t xHigherPriorityTaskWoken = pdFALSE;
   xSemaphoreGiveFromISR(deactivateSemaphore, &xHigherPriorityTaskWoken);
   if (xHigherPriorityTaskWoken) {
-    portYIELD_FROM_ISR(); // sin argumento en AVR
+    portYIELD_FROM_ISR(); 
   }
 }
 
-// Nueva tarea que maneja el flag readActivated de forma segura
 void TaskControlRead(void *pvParameters) {
   (void) pvParameters;
   for (;;) {
-    // Espera señal de activar
     if (xSemaphoreTake(activateSemaphore, 30) == pdPASS) {
       readActivated = true;
       Serial.println("-2");
     }
-    // Espera señal de desactivar
+
     if (xSemaphoreTake(deactivateSemaphore, 30) == pdPASS) {
       readActivated = false;
       Serial.println("-3");
@@ -83,7 +81,7 @@ void TaskAnalogRead(void *pvParameters) {
         readActivated = false;
       }
     }
-    
+
     if (readActivated) {
       if (xSemaphoreTake(mutex, portMAX_DELAY) == pdPASS) {
         a3Value = analogRead(A3);
