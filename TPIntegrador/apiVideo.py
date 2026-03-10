@@ -1,8 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-
-
 app = Flask(__name__)
 CORS(app)
 
@@ -16,19 +14,23 @@ names = ["WoW Lich King",
          "Cooking burger",
          "Te Para Tres",
          "Monster truck"
-         ]
+        ]
 videos = [
-    "https://www.youtube.com/watch?v=tyNgbHX9p2U",
-    "https://www.youtube.com/watch?v=0mC8dsQJK7w",
-    "https://www.youtube.com/watch?v=vVXIK1xCRpY",
-    "https://www.youtube.com/watch?v=m08TxIsFTRI",
-    "https://www.youtube.com/watch?v=n9xhJrPXop4",
-    "https://www.youtube.com/watch?v=2GWz9PqiywM",
-    "https://www.youtube.com/watch?v=05f8sG4OhZs",
-    "https://www.youtube.com/watch?v=IItSCWUndgM",
-    "https://www.youtube.com/watch?v=1mbBQPBGP1g",
-    "https://www.youtube.com/watch?v=PHGwHp86Y1o"
+    "https://www.youtube.com/embed/tyNgbHX9p2U",
+    "https://www.youtube.com/embed/0mC8dsQJK7w",
+    "https://www.youtube.com/embed/vVXIK1xCRpY",
+    "https://www.youtube.com/embed/m08TxIsFTRI",
+    "https://www.youtube.com/embed/n9xhJrPXop4",
+    "https://www.youtube.com/embed/2GWz9PqiywM",
+    "https://www.youtube.com/embed/05f8sG4OhZs",
+    "https://www.youtube.com/embed/IItSCWUndgM",
+    "https://www.youtube.com/embed/1mbBQPBGP1g",
+    "https://www.youtube.com/embed/PHGwHp86Y1o"
 ]
+
+@app.route("/")
+def index():
+    return app.send_static_file("index.html")
 
 @app.route("/video/<int:id>", methods=["GET"])
 def getVideo(id):
