@@ -1,6 +1,6 @@
 import serial
 import time
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 import requests
 import threading
 from flask_socketio import SocketIO
@@ -11,7 +11,7 @@ app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 #Inicializamos el serial
-ser = serial.Serial(port='COM5', 
+ser = serial.Serial(port='COM3', 
                     baudrate=9600, 
                     bytesize=serial.EIGHTBITS,
                     parity=serial.PARITY_NONE, 
@@ -26,12 +26,13 @@ time.sleep(2)
 
 @app.route("/")
 def index():
-    return app.send_static_file("index.html")
+    return render_template("index.html")
 
 @app.route("/start", methods=["GET"])
 def start():
     ser.write(b"0\n")
-    line = ser.readline().decode("utf-8").strip()
+    #line = ser.readline().decode("utf-8").strip()
+    line = 4
     channel = int(line)
     try:
         response = requests.get(apiVideoUrl + str(channel))
