@@ -91,6 +91,7 @@ def changeChannel(id):
         ser.write((str(response.json()["id"]) + "\n").encode("utf-8"))
         if (response.status_code == 200):
             channel = int(response.json()["id"])
+            socketio.emit("changeChannel", response.json())
             return (response.json()), 200
         else:
             return jsonify({"error": "API Didn't Respond"}), 503

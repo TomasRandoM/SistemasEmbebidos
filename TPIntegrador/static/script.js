@@ -1,7 +1,7 @@
 var channel = 1;
 document.addEventListener("DOMContentLoaded", () => {
     
-    fetch("http://127.0.0.1:3000/start")
+    fetch("http://192.168.1.6:3000/start")
     .then(res => res.json())
     .then(data => {
         channel = parseInt(data.id);
@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("videoYT").src = data.video + "?autoplay=1&mute=0";
     });
 
-    const socket = io("http://127.0.0.1:3000")
+    const socket = io("http://192.168.1.6:3000")
 
     socket.on("changeChannel", (data) => {
         channel = parseInt(data.id);
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function fetchChangeChannel(newChannel) {
-    fetch("http://127.0.0.1:3000/changeChannel/" + newChannel)
+    fetch("http://192.168.1.6:3000/changeChannel/" + newChannel)
         .then(res => res.json())
         .then(data => {
             channel = parseInt(data.id);
