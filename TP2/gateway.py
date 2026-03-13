@@ -36,11 +36,11 @@ def getValue():
         "readActivated": readActivated
     }), 200
 
-@app.route("/start", methods=["POST"])
+@app.route("/start", methods=["GET"])
 def startReading():
     ser.write("-2\n".encode("utf-8"))
 
-@app.route("/stop", methods=["POST"])
+@app.route("/stop", methods=["GET"])
 def startReading():
     ser.write("-3\n".encode("utf-8"))
 

@@ -135,14 +135,17 @@
 
                     if(data.readActivated) {
                         document.getElementById("valorLuz").innerText = data.ldrValue;
-
-                        if (data.alarm) {
-                            let alarma = document.getElementById("alarma");
-                            alarma.className = "alarm on";
-                            alarma.innerText = "ALARMA: luz mayor a 800";
-                        }
                     }
-                    
+                    if (data.alarm) {
+                        let alarma = document.getElementById("alarma");
+                        alarma.className = "alarm on";
+                        alarma.innerText = "ALARMA: luz mayor a 800";
+                    }
+                    else {
+                        let alarma = document.getElementById("alarma");
+                        alarma.className = "alarm off";
+                        alarma.innerText = "";
+                    }
                 });
 
         }, 3000);
