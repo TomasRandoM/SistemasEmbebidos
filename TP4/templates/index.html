@@ -3,90 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Monitor de Intensidad Luminosa</title>
-
-    <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            width: 350px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        h1 {
-            margin-bottom: 20px;
-        }
-
-        .sensor {
-            font-size: 48px;
-            font-weight: bold;
-            margin: 20px 0;
-            color: #2a5298;
-        }
-
-        .status {
-            margin: 10px 0;
-            font-size: 18px;
-        }
-
-        .alarm {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: bold;
-        }
-
-        .alarm.off {
-            background: #e0ffe0;
-            color: #1c7c1c;
-        }
-
-        .alarm.on {
-            background: #ffdddd;
-            color: #b30000;
-        }
-
-        .buttons {
-            margin-top: 25px;
-        }
-
-        button {
-            padding: 12px 18px;
-            margin: 5px;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .start {
-            background: #28a745;
-            color: white;
-        }
-
-        .stop {
-            background: #dc3545;
-            color: white;
-        }
-
-        button:hover {
-            opacity: 0.85;
-        }
-    </style>
+    <title>Contador de personas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-
 
 <body>
 
@@ -95,7 +14,7 @@
         <h1>Contador de personas</h1>
 
         <div class="sensor" id="people">0</div>
-
+        <div class="circle" id="circle"></div>
         <div id="alarma" class="alarm off">
             Alarma desactivada
         </div>
@@ -107,33 +26,7 @@
     </div>
 
     <script src="https://cdn.socket.io/4.8.3/socket.io.min.js" crossorigin="anonymous"></script>
-    <script>
-        const socket = io("http://192.168.1.34:3000");
-
-        fetch("http://192.168.1.34:3000/start");
-
-        socket.on("alarm", (data) => {
-            if (data.state) {
-                document.getElementById("alarma").className = "alarm on";
-                document.getElementById("alarma").innerText = "Alarma activada. Persona en la puerta.";
-            }
-            else {
-                document.getElementById("alarma").className = "alarm off";
-                document.getElementById("alarma").innerText = "Alarma desactivada";
-            }
-        });
-
-        socket.on("people", (data) => {
-            document.getElementById("people").innerText = data.quantity;
-        });
-
-        function borrarContador() {
-            fetch("http://192.168.1.34:3000/erase");
-            document.getElementById("people").innerText = 0;
-        }
-
-    </script>
-
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 
 </html>

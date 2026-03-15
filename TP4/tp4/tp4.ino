@@ -104,7 +104,7 @@ void detectPerson() {
     unsigned long startTime = millis();
     bool personDetected = true;
     bool alarmActivated = false;
-
+    Serial.println("-5");
     while (millis() - startTime < 500) {
 
         digitalWrite(trigPin, LOW);
@@ -117,6 +117,7 @@ void detectPerson() {
 
         distance = duration * 0.034 / 2;
         if (distance > wallDistance - 5) {
+            Serial.println("-6");
             personDetected = false;
             break;
         }
@@ -150,6 +151,7 @@ void detectPerson() {
             }
             if (distance > wallDistance - 5) {
                 personDetected = false;
+                Serial.println("-6");
                 if (alarmActivated) {
                     for (int i = 6; i < 14; i++) {
                         digitalWrite(i, LOW);

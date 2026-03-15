@@ -57,6 +57,10 @@ def readSerial():
                     socketio.emit("alarm", {"state" : False})
                 elif (value == -1):
                     socketio.emit("alarm", {"state" : True})
+                elif (value == -5):
+                    socketio.emit("person", {"state" : True})
+                elif (value == -6):
+                    socketio.emit("person", {"state" : False})
                 else:
                     socketio.emit("people", {"quantity" : value})
             except ValueError:
